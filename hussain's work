@@ -1,0 +1,266 @@
+#include<iostream>
+#include<string>
+#include<algorithm>
+
+using namespace std;
+
+int tv = 0;
+int votes = 0;
+int tc = 0;
+int can = false;
+int v = 0;
+bool s = false;
+
+
+struct participant {
+    string username;
+    string cnnic;
+    string password;
+};
+
+bool isValidCnic(const string& cnic) {
+    return cnic.length() == 13 && all_of(cnic.begin(), cnic.end(), ::isdigit);
+}
+class election {
+public:
+    bool flag = true;
+    int check;
+    int c = 0;
+    string cnnic;
+    string p;
+    string par;
+
+    void endelection() {
+        if (s == false)
+            cout << "\nElection has not Started yet\n";
+        else if (s == true)
+            s = false;
+    }
+
+    void addcandidate() {
+        string u;
+        if (s == true) {
+            cout << "\nHow many candidates you want to add: ";
+            cin >> c;
+            if (c > 0)
+                can = true;
+
+            candArr = new candidate[c];
+            for (int i = 0; i < c; i++) {
+                cout << "Enter name of candidate " << i + 1 << ": ";
+                cin.ignore();
+                getline(cin, u);
+
+                while (u.empty()) {
+                    cout << "Name of candidate can't be empty\nRe-enter the name: ";
+                    getline(cin, u);
+                }
+
+                candArr[i].setusername(u);
+
+                do {
+                    cout << "Enter CNIC without spaces: ";
+                    getline(cin, cnnic);
+                    if (!isValidCnic(cnnic)) {
+                        cout << "Invalid CNIC. Must be 13 digits.\n";
+                    }
+                } while (!isValidCnic(cnnic));
+
+                cout << "CNIC VERIFIED\n";
+
+                bool cnnicflag = true;
+                while (cnnicflag) {
+                    if (cnnic.substr(0, 3) == "344") {
+                        cout << "Candidate authorized\n";
+                        cnnicflag = false;
+                    }
+                    else {
+                        cout << "Enter CNIC starting with 344: ";
+                        getline(cin, cnnic);
+                    }
+                }
+                candArr[i].setcnnic(cnnic);
+
+                cout << "Enter password for candidate " << i + 1 << ": ";
+                cin >> p;
+                candArr[i].setpassword(p);
+
+                cout << "Enter party name: ";
+                cin.ignore();
+                getline(cin, par);
+                while (par.empty()) {
+                    cout << "Name of party can't be empty\nRe-enter the name of party: ";
+                    getline(cin, par);
+                }
+                candArr[i].setparty(par);
+                cout << "Candidate added";
+            }
+            tc += c;
+        }
+        else {
+            cout << "Election has not started\n";
+        }
+    }
+
+    void addvoter() {
+        string u;
+        if (s == true) {
+            cout << "How many voters you want to add: ";
+            cin >> c;
+            if (c > 0)
+                can = true;
+
+            voterArr = new voter[c];
+            for (int i = 0; i < c; i++) {
+                cout << "Enter name of voter " << i + 1 << ": ";
+                cin.ignore();
+                getline(cin, u);
+
+                while (u.empty()) {
+                    cout << "Name of voter can't be empty\nRe-enter the name: ";
+                    getline(cin, u);
+                }
+
+                voterArr[i].setusername(u);
+
+                do {
+                    cout << "Enter CNIC without spaces: ";
+                    getline(cin, cnnic);
+                    if (!isValidCnic(cnnic)) {
+                        cout << "Invalid CNIC. Must be 13 digits.\n";
+                    }
+                } while (!isValidCnic(cnnic));
+
+                cout << "CNIC VERIFIED\n";
+
+                bool cnnicflag = true;
+                while (cnnicflag) {
+                    if (cnnic.substr(0, 3) == "344") {
+                        cout << "Voter authorized\n";
+                        cnnicflag = false;
+                    }
+                    else {
+                        cout << "Enter CNIC starting with 344: ";
+                        getline(cin, cnnic);
+                    }
+                }
+                voterArr[i].setcnnic(cnnic);
+                cout << "Enter password for voter " << i + 1 << ": ";
+                cin >> p;
+                voterArr[i].setpassword(p);
+
+                cout << "Voter added successfully.\n";
+                tv += 1;
+            }
+
+        }
+        else {
+            cout << "Election has not started.\n";
+        }
+    }
+
+    void startelection() {
+        s = true;
+        if (tc == 0) {
+            addcandidate();
+        }
+    }
+};
+
+
+void admin() {
+    bool cancel = true;
+    int a;
+    while (cancel) {
+
+        menuadmin();
+
+        cout << "Press 1. to continue or\nPress 0. to go back" << endl;;
+        cin >> a;
+        if (a == 0) {
+            cancel = false;
+            cout << endl;
+        }
+        else if (a == 1) {
+            cout << endl;
+            cancel = true;
+        }
+    }
+    return;
+}
+
+void menuadmin() {
+
+    election e;
+    int a = 0;
+    string u;
+
+    cout << "Press\n1. To add candidate\n2. To add voter\n3. To create election\n4. To view results\n0.to Exit\n";
+    cin >> a;
+
+    if (a == 1) {
+        e.addcandidate();
+    }
+    else if (a == 2) {
+        e.addvoter();
+    }
+    else if (a == 3) {
+        int o;
+        cout << "Press 1 to start election\n2 to end election\n: ";
+        cin >> o;
+        switch (o) {
+        case 1:
+            e.startelection();
+            break;
+        case 2:
+            e.endelection();
+            break;
+        default:
+            cout << "Invalid option.\n";
+            break;
+        }
+    }
+    else if (a == 4) {
+        administrator adminObj;
+        adminObj.viewResults();
+    }
+    else if (a == 0)
+        return;
+    else {
+        cout << "\nInvalid input.\n";
+        return;
+
+    }
+}
+
+
+int main() {
+    bool cancel = false;
+    cout << "\t\t\t\t\tWELCOME TO ONLINE ELECTION SYSTEM\n\n\n";
+    while (!cancel) {
+        int a;
+        cout << "\t\t\"Do You Want To Login\"\n";
+        cout << "Press\n1.To Login as Administrator\n2.To Login as Candidate\n3.To Login as Voter\n0.To exit\nEnter your command: ";
+        cin >> a;
+        switch (a) {
+        case 0:
+            cancel = false;
+            break;
+        case 1:
+            admin();
+            break;
+        case 2:
+            candidatef();
+            break;
+        case 3:
+            vote();
+            break;
+        default:
+            cancel = false;
+            cout << "Invalid input.\nTry again";
+        }
+    }
+    if (candArr != nullptr) {
+        delete[] candArr;
+    }
+}
