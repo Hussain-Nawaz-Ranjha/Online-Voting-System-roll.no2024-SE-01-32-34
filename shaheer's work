@@ -1,0 +1,104 @@
+//#define _CRT_SECURE_NO_WARNINGS
+#include<iostream>
+#include<algorithm>
+using namespace std;
+
+struct participant {
+    string username;
+    string cnnic;
+    string password;
+};
+bool isValidCnic(const string& cnic) {
+    return cnic.length() == 13 && all_of(cnic.begin(), cnic.end(), ::isdigit);
+}
+
+class user {
+protected:
+    string username;
+    string password;
+    string cnnic;
+public:
+    participant p;
+
+    user() {
+        username = "abc";
+        password = "123";
+    }
+    user(string u, string pass) {
+        username = u;
+        password = pass;
+    }
+
+    void setusername(string u) {
+        username = u;
+    }
+    void setpassword(string p) {
+        password = p;
+    }
+    void setcnnic(string c) {
+        cnnic = c;
+    }
+    string getcnnic() {
+        return cnnic;
+    }
+    string getusername() {
+        return username;
+    }
+    string getpassword() {
+        return password;
+    }
+    bool login(string n, string pass) {
+        return (n == p.cnnic && pass == p.password);
+    }
+};
+
+ class candidate {
+protected:
+    string username;
+    string password;
+    string cnnic;
+    string party;
+
+public:
+    static int totalvotes;
+
+    void setusername(string u) {
+        username = u;
+    }
+    void setpassword(string p) {
+        password = p;
+    }
+    void setcnnic(string p) {
+        cnnic = p;
+    }
+    void setparty(string par) {
+        party = par;
+    }
+    string getusername() {
+        return username;
+    }
+    string getpassword() {
+        return password;
+    }
+    string getcnnic() {
+        return cnnic;
+    }
+    string getparty() {
+        return party;
+    }
+    void incrementVotes() {
+        totalvotes++;
+    }
+    int getVoteCount() {
+        return totalvotes;
+    }
+    void getCandidateInfo() {
+        cout << username << " has CNIC " << cnnic << " and password " << password << endl;
+    }
+};
+
+int candidate::totalvotes = 0;
+
+candidate* candArr = nullptr;
+
+candidate* candArr = nullptr;
